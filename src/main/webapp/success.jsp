@@ -10,7 +10,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>失败</title>
+    <title>成功</title>
     <link rel="stylesheet" type="text/css" href="css/common.css">
     <link rel="stylesheet" href="css/register.css">
     <!--导入jquery-->
@@ -23,9 +23,6 @@
 <div style="text-align:center;red:yellow;font-weight:bold;height:150px;padding-top:100px;font-size:30px;">
     <c:if test="${msg !=null}">
         <h4>${msg}</h4>
-    </c:if>
-    <c:if test="${msg ==null}">
-        <h4>您未参加任何度假主题</h4>
     </c:if>
 </div>
 <!--引入尾部-->

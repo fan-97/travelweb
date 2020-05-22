@@ -3,12 +3,41 @@ package com.qingda.domain;
 import java.io.Serializable;
 
 public class Participation implements Serializable {
+    public Participation() {
+    }
+
+    public Participation(int flag, String p_nameid, String p_hoildayid, String price) {
+        this.flag = flag;
+        this.p_nameid = p_nameid;
+        this.p_hoildayid = p_hoildayid;
+        this.price = price;
+    }
+
+    private int flag;
 
     private String p_id;
 
     private String p_nameid;
 
     private String p_hoildayid;
+
+    private String price;
+
+    public String getPrice() {
+        return price;
+    }
+
+    public void setPrice(String price) {
+        this.price = price;
+    }
+
+    public int getFlag() {
+        return flag;
+    }
+
+    public void setFlag(int flag) {
+        this.flag = flag;
+    }
 
     public String getP_id() {
         return p_id;

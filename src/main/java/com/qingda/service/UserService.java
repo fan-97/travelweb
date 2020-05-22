@@ -30,4 +30,9 @@ public class UserService {
         UserDao userDao = new UserDao();
         userDao.register(user);
     }
+
+    public User getUserByName(String name){
+        UserDao userDao = new UserDao();
+        return userDao.getUserInfoByName(name);
+    }
 }

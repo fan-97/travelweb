@@ -22,6 +22,8 @@ public class BaseServlet extends HttpServlet {
             method.invoke(this,request,response);
         } catch (Exception e) {
             e.printStackTrace();
+            request.getSession().setAttribute("msg","系统错误");
+            response.sendRedirect("error.jsp");
         }
 
     }

@@ -6,7 +6,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 
 <head>
@@ -31,32 +31,41 @@
         </div>
         <div>
             <div class="left">
-                <c:forEach items="${list}" var="holiday">
-                    <table class="table table-bordered">
-                        <tr>
-                            <th>度假主题:</th>
-                            <td>${holiday.l_Theme}</td>
-                        </tr>
-                        <tr>
-                            <th>目的地:</th>
-                            <td>${holiday.l_Destination}</td>
-                        </tr>
-                        <tr>
-                            <th>出发时间:</th>
-                            <td>${holiday.l_Data}</td>
-                        </tr>
-                        <tr>
-                            <th>行程说明:</th>
-                            <td>${holiday.l_Explain}</td>
-                        </tr>
-                        <tr>
-                            <td style="text-align: center" colspan="2">
-                            <button type="button" class="btn btn-default"><a href="participation?method=canceParticipation&l_ID=${holiday.l_ID}&username=${user.u_Name}">取消参加</a></button>
-                            </td>
-                        </tr>
-                    </table>
-                    <br>
-                </c:forEach>
+                <c:if test="${list.size ==0}">
+                    <h4>您还没有任何订单，请去参团吧！</h4>
+                </c:if>
+                <c:if test="${list.size != 0}">
+                    <c:forEach items="${list}" var="order">
+                        <table class="table table-bordered">
+                            <tr>
+                                <th>订单id</th>
+                                <th>用户名</th>
+                                <th>订单价格</th>
+                                <th>订单状态</th>
+                                <th>操作</th>
+                            </tr>
+                            <tr>
+                                <td style="vertical-align: middle">${order.p_id}</td>
+                                <td style="vertical-align: middle">${order.p_nameid}</td>
+                                <td style="vertical-align: middle">${order.price}元</td>
+                                <td style="vertical-align: middle">
+                                    <c:if test="${order.flag == 1}">
+                                        <font color="green">已支付</font>
+                                    </c:if>
+                                    <c:if test="${order.flag == 0}">
+                                        <font color="red">未支付</font>
+                                    </c:if>
+                                </td>
+                                <td style="vertical-align: middle">
+                                    <button type="button" class="btn btn-default">
+                                        <a href="participation?method=participationDetail&p_id=${order.p_id}">订单详情</a>
+                                    </button>
+                                </td>
+                            </tr>
+                        </table>
+                        <br>
+                    </c:forEach>
+                </c:if>
             </div>
         </div>
     </div>

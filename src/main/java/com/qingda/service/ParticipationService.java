@@ -6,18 +6,27 @@ import com.qingda.domain.Participation;
 import java.util.List;
 
 public class ParticipationService {
+
+    private ParticipationDao participationDao = new ParticipationDao();
+
     public List<Participation> findparticipationByName(String username) {
-        ParticipationDao participationDao = new ParticipationDao();
         return participationDao.findparticipationByName(username);
     }
 
-    public void join(String l_theme, String u_name) {
-        ParticipationDao participationDao = new ParticipationDao();
-        participationDao.join(l_theme,u_name);
+    public Participation join(Participation participation) {
+        return participationDao.insert(participation);
     }
 
-    public void canceParticipation(String l_id) {
-        ParticipationDao participationDao = new ParticipationDao();
-        participationDao.canceParticipation(l_id);
+    public void canceParticipation(String p_id) {
+        participationDao.delete(p_id);
     }
+
+    public Participation findById(String id) {
+        return participationDao.findById(id);
+    }
+
+    public void update(Participation participation) {
+        participationDao.update(participation);
+    }
+
 }

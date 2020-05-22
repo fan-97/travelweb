@@ -55,6 +55,19 @@ public class UserDao {
         }
     }
 
+    public User getUserInfoByName(String name){
+        try {
+            JdbcTemplate template = new JdbcTemplate(JDBCUtils.getDataSource());
+            //根据姓名查询数据库
+            String sql = "select * from t_user where u_Name = ?";
+            User user = template.queryForObject(sql, new BeanPropertyRowMapper<>(User.class), name);
+            return user;
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     public void register(User user) {
         JdbcTemplate template = new JdbcTemplate(JDBCUtils.getDataSource());
         String sql = "insert into t_user values(?,?,?,?,?,?,?,?,?,?,?,?) ";
