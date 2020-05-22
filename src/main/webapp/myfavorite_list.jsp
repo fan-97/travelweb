@@ -31,10 +31,10 @@
         </div>
         <div>
             <div class="left">
-                <c:if test="${list.size ==0}">
+                <c:if test="${empty list}">
                     <h4>您还没有任何订单，请去参团吧！</h4>
                 </c:if>
-                <c:if test="${list.size != 0}">
+                <c:if test="${not empty list}">
                     <c:forEach items="${list}" var="order">
                         <table class="table table-bordered">
                             <tr>

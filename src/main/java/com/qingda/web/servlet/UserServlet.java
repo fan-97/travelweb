@@ -1,8 +1,10 @@
 package com.qingda.web.servlet;
 
-
-import com.mysql.jdbc.StringUtils;
+import com.qingda.domain.Favorite;
+import com.qingda.domain.Holiday;
 import com.qingda.domain.User;
+import com.qingda.service.FavoriteService;
+import com.qingda.service.HolidayService;
 import com.qingda.service.UserService;
 
 import javax.servlet.ServletException;
@@ -12,9 +14,14 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 @WebServlet(name = "UserServlet", urlPatterns = "/user")
 public class UserServlet extends BaseServlet {
+
+    private FavoriteService favoriteService = new FavoriteService();
+    private HolidayService holidayService = new HolidayService();
     /**
      * 退出登录
      *
@@ -91,6 +98,12 @@ public class UserServlet extends BaseServlet {
             user = service.getuser(user.getU_ID());
             // 登录成功
             session.setAttribute("user", user);
+            List<Favorite> favoriteList = favoriteService.favoriteListByUser(user.getU_ID());
+            List<Holiday> list = new ArrayList<>();
+            for (Favorite favorite : favoriteList) {
+                list.add(holidayService.findDetailholiday(favorite.getL_id()));
+            }
+            request.setAttribute("holiday",list);
         } else {
             request.getRequestDispatcher("index.jsp").forward(request, response);
         }
@@ -126,7 +139,7 @@ public class UserServlet extends BaseServlet {
         user.setU_Sex(u_Sex);
         user.setU_Birth(u_Birth);
 
-        if (user != null && user.getU_Name()!=null) {
+        if (user != null && user.getU_Name() != null) {
             UserService service = new UserService();
             service.edituser(user);
             // 登录成功
@@ -145,15 +158,15 @@ public class UserServlet extends BaseServlet {
         HttpSession session = request.getSession();
         UserService service = new UserService();
         User user = service.getuser(request.getParameter("id"));
-        if(user==null){
-            user=new User();
+        if (user == null) {
+            user = new User();
         }
         BigDecimal add = new BigDecimal(request.getParameter("addprice"));
         BigDecimal uprice = user.getU_price();
-        if(uprice!=null){
-            uprice=uprice.add(add);
-        }else{
-            uprice=add;
+        if (uprice != null) {
+            uprice = uprice.add(add);
+        } else {
+            uprice = add;
         }
         user.setU_price(uprice);
         service.addprice(user.getU_ID(), user.getU_price());

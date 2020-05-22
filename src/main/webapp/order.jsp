@@ -59,19 +59,22 @@
                 <th>订单价格:</th>
                 <td style="vertical-align: middle">${order.l_price}元</td>
             </tr>
-            <tr>
-                <td style="text-align: center">
-                    <c:if test="${order.flag == 0}">
+            <c:if test="${order.flag == 0}">
+                <tr>
+                    <td style="text-align: center">
+
+                    </td>
+                    <td style="text-align: center">
                         <button type="button" class="btn btn-default"><a
                                 href="participation?method=pay&price=${order.l_price}&p_ID=${order.p_id}">付款</a>
                         </button>
                         <button type="button" class="btn btn-default"><a
                                 href="participation?method=canceParticipation&p_ID=${order.p_id}">取消订单</a>
                         </button>
-                    </c:if>
 
-                </td>
-            </tr>
+                    </td>
+                </tr>
+            </c:if>
 
         </table>
     </div>

@@ -31,50 +31,56 @@
         </div>
         <div>
             <div class="left">
-                    <table class="table table-bordered" style="width: 50%;margin: auto">
-                        <tr>
-                            <th>度假主题:</th>
-                            <td style="vertical-align: middle">${holiday.l_Theme}</td>
-                        </tr>
-                        <tr>
-                            <th>目的地:</th>
-                            <td style="vertical-align: middle">${holiday.l_Destination}</td>
-                        </tr>
-                        <tr>
-                            <th>常规价:</th>
-                            <td style="vertical-align: middle">${holiday.l_RetailPrice}元</td>
-                        </tr>
-                        <tr>
-                            <th>儿童价:</th>
-                            <td style="vertical-align: middle">${holiday.l_ChildPrice}元</td>
-                        </tr>
-                        <tr>
-                            <th>学生价:</th>
-                            <td style="vertical-align: middle">${holiday.l_StudentPrice}元</td>
-                        </tr>
-                        <tr>
-                            <th>出发时间:</th>
-                            <td style="vertical-align: middle">${holiday.l_Data}</td>
-                        </tr>
-                        <tr>
-                            <th>出行方式:</th>
-                            <td style="vertical-align: middle">${holiday.l_Traffic}</td>
-                        </tr>
-                        <tr>
-                            <th>旅游时长:</th>
-                            <td style="vertical-align: middle">${holiday.l_TravelDays}天</td>
-                        </tr>
-                        <tr>
-                            <th>行程说明:</th>
-                            <td>${holiday.l_Explain}</td>
-                        </tr>
-                        <tr>
-                            <td style="text-align: center" colspan="2">
-                                <button type="button" class="btn btn-default"><a href="participation?method=join&l_Theme=${holiday.l_ID}&u_Name=${user.u_Name}">我要参加</a></button>
-                            </td>
-                        </tr>
-                    </table>
-                    <br>
+                <table class="table table-bordered" style="width: 50%;margin: auto">
+                    <tr>
+                        <th>度假主题:</th>
+                        <td style="vertical-align: middle">${holiday.l_Theme}</td>
+                    </tr>
+                    <tr>
+                        <th>目的地:</th>
+                        <td style="vertical-align: middle">${holiday.l_Destination}</td>
+                    </tr>
+                    <tr>
+                        <th>常规价:</th>
+                        <td style="vertical-align: middle">${holiday.l_RetailPrice}元</td>
+                    </tr>
+                    <tr>
+                        <th>儿童价:</th>
+                        <td style="vertical-align: middle">${holiday.l_ChildPrice}元</td>
+                    </tr>
+                    <tr>
+                        <th>学生价:</th>
+                        <td style="vertical-align: middle">${holiday.l_StudentPrice}元</td>
+                    </tr>
+                    <tr>
+                        <th>出发时间:</th>
+                        <td style="vertical-align: middle">${holiday.l_Data}</td>
+                    </tr>
+                    <tr>
+                        <th>出行方式:</th>
+                        <td style="vertical-align: middle">${holiday.l_Traffic}</td>
+                    </tr>
+                    <tr>
+                        <th>旅游时长:</th>
+                        <td style="vertical-align: middle">${holiday.l_TravelDays}天</td>
+                    </tr>
+                    <tr>
+                        <th>行程说明:</th>
+                        <td>${holiday.l_Explain}</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: center" colspan="2">
+                            <button type="button" class="btn btn-default"><a
+                                    href="participation?method=join&l_Theme=${holiday.l_ID}&u_Name=${user.u_Name}">我要参加</a>
+                            </button>
+                            <a class="btn" id="favorite" onclick="addFavorite('${holiday.l_ID}','${user.u_ID}')"
+                               title="${flag}"><i
+                                    class="glyphicon glyphicon-heart-empty"></i>点击收藏</a>
+                        </td>
+
+                    </tr>
+                </table>
+                <br>
             </div>
         </div>
     </div>
@@ -83,7 +89,41 @@
 <!--引入头部-->
 <%--<div id="footer"></div>--%>
 <jsp:include page="footer.jsp"></jsp:include>
+<script type="text/javascript" src="js/jquery-3.3.1.js"></script>
 <!--导入布局js，共享header和footer-->
 <%--<script type="text/javascript" src="js/include.js"></script>--%>
+
+<script>
+    if ($("#favorite").attr("title") === '1') {
+        //不可点击
+        $(".collect a").prop("disabled", true);//置灰
+        $("#favorite").text("取消收藏");
+    } else {
+        $(".collect a").addClass("already");
+    }
+    var addFavorite = function (l_id, u_id) {
+        if ($("#favorite").attr("title") === '1') {
+            $.post("participation?method=canFavorite", {"l_id": l_id, "u_id": u_id}, function (res) {
+                alert(res)
+                if (res === 'success') {
+                    alert(111)
+                    $(".collect a").addClass("already");
+                } else {
+                    alert('取消失败')
+                }
+            })
+        } else {
+            $.post("participation?method=addFavorite", {"l_id": l_id, "u_id": u_id}, function (res) {
+                if (res === 'success') {
+                    $(".collect a").prop("disabled", true);//置灰
+                    $("#favorite").text("取消收藏");
+                } else {
+                    alert('收藏失败')
+                }
+            })
+
+        }
+    }
+</script>
 </body>
 </html>

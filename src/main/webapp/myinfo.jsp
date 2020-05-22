@@ -25,7 +25,7 @@
     <script>
         $(function () {
             $(".right_style").hide();
-            $("#right"+2).show();
+            $("#right" + 2).show();
             $(".modify").click(function () {
                 $('.text').attr("disabled", false);
                 $('.text').addClass("add");
@@ -33,10 +33,12 @@
 
             });
         });
-        function show(index){
+
+        function show(index) {
             $(".right_style").hide();
-            $("#right"+index).show();
+            $("#right" + index).show();
         }
+
         function addprice() {
             var price = $("#price").val();
             location.href = "user?method=chongzhi&id=${user.u_ID}&addprice=" + price;
@@ -100,84 +102,108 @@
                         </dd>
                     </dl>
                 </div>
+            </div>
         </div>
-    </div>
         <div class="right_style" id="right3">
-            <div class="title_style"><em></em>我的收藏</div>
+            <div class="title_style"><em></em>
+                <c:forEach items="${holiday}" var="holiday">
+                    <table class="table table-bordered">
+                        <tr>
+                            <th>度假主题:</th>
+<%--                            <th>目的地:</th>--%>
+<%--                            <th>出发时间:</th>--%>
+<%--                            <th>行程说明:</th>--%>
+                            <th>操作</th>
+                        </tr>
+                        <tr>
+                            <td>${holiday.l_Theme}</td>
+<%--                            <td>${holiday.l_Destination}</td>--%>
+<%--                            <td>${holiday.l_Data}</td>--%>
+<%--                            <td>${holiday.l_Explain}</td>--%>
+                            <td style="text-align: center">
+                                <button type="button" class="btn btn-default"><a
+                                        href="holiday?method=findDetailholiday&l_ID=${holiday.l_ID}">查看详情</a></button>
+                            </td>
+                        </tr>
+
+                    </table>
+                    <br>
+                </c:forEach>
+            </div>
         </div>
-    <div class="right_style" id="right1">
-        <div class="title_style"><em></em>账户管理</div>
-        <div class="user_Account_style">
-            <div class="user_Account">
-                <div class="title_name">我的账户余额：</div>
-                <div class="Balance clearfix">
-                    <p class="je_Balance">账户余额：<b>${user.u_price}</b>元 </p>
-                    <p class="clearfix Account_btn"><a href="#" class="Recharge_btn" id="Recharge_btn"
-                                                       data-toggle="modal" data-target="#addprice">充值</a>
-                    </p>
+        <div class="right_style" id="right1">
+            <div class="title_style"><em></em>账户管理</div>
+            <div class="user_Account_style">
+                <div class="user_Account">
+                    <div class="title_name">我的账户余额：</div>
+                    <div class="Balance clearfix">
+                        <p class="je_Balance">账户余额：<b>${user.u_price}</b>元 </p>
+                        <p class="clearfix Account_btn"><a href="#" class="Recharge_btn" id="Recharge_btn"
+                                                           data-toggle="modal" data-target="#addprice">充值</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--右侧样式-->
+        <div class="right_style" id="right2">
+            <!--消费记录样式-->
+            <div class="user_address_style">
+                <div class="title_style"><em></em>用户信息</div>
+                <!--用户信息样式-->
+                <!--个人信息-->
+                <div class="Personal_info" id="Personal">
+                    <ul class="xinxi">
+                        <form action="user?method=edituser" method="post" id="userform">
+                            <input name="u_ID" value="${user.u_ID}" type="hidden">
+                            <li><label class="label">用户名：</label><span><input name="u_Name" type="text"
+                                                                              value="${user.u_Name}" class="text"
+                                                                              disabled="disabled"/></span></li>
+                            <li><label class="label">性别：</label> <span><input name="u_Sex" type="text"
+                                                                              value="${user.u_Sex}" class="text"
+                                                                              disabled="disabled"/></span></li>
+                            <li><label class="label">生日：</label> <span><input name="u_Birth" type="text"
+                                                                              value="${user.u_Birth}" class="text"
+                                                                              disabled="disabled"/></span></li>
+                            <li><label class="label">证件类型：</label> <span><input name="u_DocumentType" type="text"
+                                                                                value="${user.u_DocumentType}"
+                                                                                class="text"
+                                                                                disabled="disabled"/></span></li>
+                            <li><label class="label">证件号码：</label> <span><input name="u_IDNumber" type="text"
+                                                                                value="${user.u_IDNumber}" class="text"
+                                                                                disabled="disabled"/></span></li>
+                            <li><label class="label">省：</label> <span><input name="u_Location_prov" type="text"
+                                                                             value="${user.u_Location_prov}"
+                                                                             class="text" disabled="disabled"/></span>
+                            </li>
+                            <li><label class="label">市：</label> <span><input name="u_Location_city" type="text"
+                                                                             value="${user.u_Location_city}"
+                                                                             class="text" disabled="disabled"/></span>
+                            </li>
+                            <li><label class="label">区：</label> <span><input name="u_Location_coun" type="text"
+                                                                             value="${user.u_Location_coun}"
+                                                                             class="text" disabled="disabled"/></span>
+                            </li>
+                            <div class="bottom">
+                                <input type="button" value="修改信息" class="modify"/>
+                                <input type="submit" value="确认修改" class="confirm"/>
+                                <script>
+                                    // onclick = "confirm()"
+                                    //
+                                    // function confirm() {
+                                    //     var params = $("#userform").serializeArray();
+                                    //     alert(params);
+                                    //     location.href = "user?method=edituser&" + params;
+                                    // }
+                                </script>
+                            </div>
+                        </form>
+
+                    </ul>
                 </div>
             </div>
         </div>
     </div>
-    <!--右侧样式-->
-    <div class="right_style" id="right2">
-        <!--消费记录样式-->
-        <div class="user_address_style">
-            <div class="title_style"><em></em>用户信息</div>
-            <!--用户信息样式-->
-            <!--个人信息-->
-            <div class="Personal_info" id="Personal">
-                <ul class="xinxi">
-                    <form action="user?method=edituser" method="post" id="userform">
-                        <input name="u_ID" value="${user.u_ID}" type="hidden">
-                        <li><label class="label">用户名：</label><span><input name="u_Name" type="text"
-                                                                          value="${user.u_Name}" class="text"
-                                                                          disabled="disabled"/></span></li>
-                        <li><label class="label">性别：</label> <span><input name="u_Sex" type="text"
-                                                                          value="${user.u_Sex}" class="text"
-                                                                          disabled="disabled"/></span></li>
-                        <li><label class="label">生日：</label> <span><input name="u_Birth" type="text"
-                                                                          value="${user.u_Birth}" class="text"
-                                                                          disabled="disabled"/></span></li>
-                        <li><label class="label">证件类型：</label> <span><input name="u_DocumentType" type="text"
-                                                                            value="${user.u_DocumentType}"
-                                                                            class="text"
-                                                                            disabled="disabled"/></span></li>
-                        <li><label class="label">证件号码：</label> <span><input name="u_IDNumber" type="text"
-                                                                            value="${user.u_IDNumber}" class="text"
-                                                                            disabled="disabled"/></span></li>
-                        <li><label class="label">省：</label> <span><input name="u_Location_prov" type="text"
-                                                                         value="${user.u_Location_prov}"
-                                                                         class="text" disabled="disabled"/></span>
-                        </li>
-                        <li><label class="label">市：</label> <span><input name="u_Location_city" type="text"
-                                                                         value="${user.u_Location_city}"
-                                                                         class="text" disabled="disabled"/></span>
-                        </li>
-                        <li><label class="label">区：</label> <span><input name="u_Location_coun" type="text"
-                                                                         value="${user.u_Location_coun}"
-                                                                         class="text" disabled="disabled"/></span>
-                        </li>
-                        <div class="bottom">
-                            <input type="button" value="修改信息" class="modify"/>
-                            <input type="submit" value="确认修改" class="confirm"/>
-                            <script>
-                                // onclick = "confirm()"
-                                //
-                                // function confirm() {
-                                //     var params = $("#userform").serializeArray();
-                                //     alert(params);
-                                //     location.href = "user?method=edituser&" + params;
-                                // }
-                            </script>
-                        </div>
-                    </form>
-
-                </ul>
-            </div>
-        </div>
-    </div>
-</div>
 </div>
 <!--引入头部-->
 <%--<div id="footer"></div>--%>

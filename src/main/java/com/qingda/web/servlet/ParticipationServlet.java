@@ -1,14 +1,12 @@
 package com.qingda.web.servlet;
 
-
 import com.mysql.jdbc.StringUtils;
-import com.qingda.domain.Holiday;
-import com.qingda.domain.Order;
-import com.qingda.domain.Participation;
-import com.qingda.domain.User;
+import com.qingda.domain.*;
+import com.qingda.service.FavoriteService;
 import com.qingda.service.HolidayService;
 import com.qingda.service.ParticipationService;
 import com.qingda.service.UserService;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -25,6 +23,7 @@ public class ParticipationServlet extends BaseServlet {
     private HolidayService holidayService = new HolidayService();
     private ParticipationService participationService = new ParticipationService();
     private UserService userService = new UserService();
+    private FavoriteService favoriteService = new FavoriteService();
 
     public void findparticipationByName(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         String username = request.getParameter("username");
@@ -39,11 +38,10 @@ public class ParticipationServlet extends BaseServlet {
         Holiday holiday = holidayService.findDetailholiday(participation.getP_hoildayid());
 
         //获取参团的信息
-        Order order = new Order(participation.getFlag(),holiday.getL_ID(), holiday.getL_Theme(), holiday.getL_Destination(),participation.getPrice() , holiday.getL_Data(), holiday.getL_Traffic(), holiday.getL_TravelDays(), holiday.getL_Participant(), holiday.getL_Explain(), participation.getP_id(), participation.getP_nameid());
+        Order order = new Order(participation.getFlag(), holiday.getL_ID(), holiday.getL_Theme(), holiday.getL_Destination(), participation.getPrice(), holiday.getL_Data(), holiday.getL_Traffic(), holiday.getL_TravelDays(), holiday.getL_Participant(), holiday.getL_Explain(), participation.getP_id(), participation.getP_nameid());
         request.getSession().setAttribute("order", order);
         response.sendRedirect("order.jsp");
     }
-
 
     public void join(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         String l_Theme = request.getParameter("l_Theme");
@@ -61,9 +59,9 @@ public class ParticipationServlet extends BaseServlet {
         }
         Holiday holiday = holidayService.findDetailholiday(l_Theme);
 
-        Participation participation = participationService.join(new Participation(0,u_Name,l_Theme,switchPrice(user, holiday)));
+        Participation participation = participationService.join(new Participation(0, u_Name, l_Theme, switchPrice(user, holiday)));
         //获取参团的信息
-        Order order = new Order(participation.getFlag(),holiday.getL_ID(), holiday.getL_Theme(), holiday.getL_Destination(),participation.getPrice() , holiday.getL_Data(), holiday.getL_Traffic(), holiday.getL_TravelDays(), holiday.getL_Participant(), holiday.getL_Explain(), participation.getP_id(), participation.getP_nameid());
+        Order order = new Order(participation.getFlag(), holiday.getL_ID(), holiday.getL_Theme(), holiday.getL_Destination(), participation.getPrice(), holiday.getL_Data(), holiday.getL_Traffic(), holiday.getL_TravelDays(), holiday.getL_Participant(), holiday.getL_Explain(), participation.getP_id(), participation.getP_nameid());
         request.getSession().setAttribute("order", order);
         response.sendRedirect("order.jsp");
     }
@@ -83,11 +81,13 @@ public class ParticipationServlet extends BaseServlet {
 
     /**
      * 支付接口
+     *
      * @param request
      * @param response
      * @throws IOException
      * @throws ServletException
      */
+    @Transactional(rollbackFor = Exception.class)
     public synchronized void pay(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         String price = request.getParameter("price");
         String p_id = request.getParameter("p_ID");
@@ -97,21 +97,47 @@ public class ParticipationServlet extends BaseServlet {
 
         User user = userService.getUserByName(userName);
         user.setU_price(user.getU_price().subtract(BigDecimal.valueOf(Double.valueOf(price))));
-        if(user.getU_price().compareTo(BigDecimal.ZERO)<0) {
-            request.getSession().setAttribute("msg","账户余额不足，请充值！");
+        if (user.getU_price().compareTo(BigDecimal.ZERO) < 0) {
+            request.getSession().setAttribute("msg", "账户余额不足，请充值！");
             response.sendRedirect("error.jsp");
             return;
         }
 
         // 从用户的账户里面扣除订单的金额
-        userService.addprice(user.getU_ID(),user.getU_price());
+        userService.addprice(user.getU_ID(), user.getU_price());
         // 更新订单的支付状态
         participation.setFlag(1);
         participationService.update(participation);
 
-        request.getSession().setAttribute("msg",String.format("支付成功！账户余额:{%s}",user.getU_price()));
-        request.getRequestDispatcher("success.jsp").forward(request,response);
+        request.getSession().setAttribute("msg", String.format("支付成功！账户余额:{%s}", user.getU_price()));
+        request.getRequestDispatcher("success.jsp").forward(request, response);
 
+    }
+
+    public void addFavorite(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        String l_id = request.getParameter("l_id");
+        String u_id = request.getParameter("u_id");
+        Favorite favorite = favoriteService.getFavorite(l_id, u_id);
+        if(favorite != null) {
+            return ;
+        }
+        int suc = favoriteService.addFavorite(new Favorite(u_id, l_id));
+        if (suc <= 0) {
+            response.getWriter().write("error");
+            return;
+        }
+        response.getWriter().write("success");
+    }
+
+    public void canFavorite(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        String l_id = request.getParameter("l_id");
+        String u_id = request.getParameter("u_id");
+        int suc = favoriteService.delete(l_id, u_id);
+        if (suc <= 0) {
+            response.getWriter().write("error");
+            return;
+        }
+        response.getWriter().write("success");
     }
 
     /**

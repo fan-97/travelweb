@@ -1,17 +1,17 @@
 /*
  Navicat Premium Data Transfer
 
- Source Server         : localhost
+ Source Server         : localhost_3306
  Source Server Type    : MySQL
- Source Server Version : 50730
+ Source Server Version : 50723
  Source Host           : localhost:3306
  Source Schema         : travel
 
  Target Server Type    : MySQL
- Target Server Version : 50730
+ Target Server Version : 50723
  File Encoding         : 65001
 
- Date: 22/05/2020 17:56:49
+ Date: 22/05/2020 23:43:55
 */
 
 SET NAMES utf8mb4;
@@ -130,7 +130,9 @@ CREATE TABLE `t_participation`  (
 -- Records of t_participation
 -- ----------------------------
 INSERT INTO `t_participation` VALUES ('08c4b729-58ae-48f6-aa9a-3eb474fa5383', 'Carey', '3821ac34-4f32-41db-a336-c36cf7e805d3', 0, '50');
+INSERT INTO `t_participation` VALUES ('a669846c-e7dd-46f3-8a12-268df7632088', 'Kevin', '6aaef1c5-3aac-45af-bb9e-ebe9f2d4c9f9', 1, '441');
 INSERT INTO `t_participation` VALUES ('b9ea9472-bd7c-498a-899a-abb83f393f72', 'Carey', 'eba5e5c6-2f64-44c2-b333-a71358288a87', 0, '50');
+INSERT INTO `t_participation` VALUES ('dde25f38-8df0-4d78-92a7-872152e8ae14', 'Kevin', '6aaef1c5-3aac-45af-bb9e-ebe9f2d4c9f9', 0, '441');
 
 -- ----------------------------
 -- Table structure for t_scenery
@@ -205,7 +207,25 @@ CREATE TABLE `t_user`  (
 -- ----------------------------
 -- Records of t_user
 -- ----------------------------
-INSERT INTO `t_user` VALUES ('2', 'Kevin', '123456', '男', '2019-11-27', '北京', '朝阳', '中国', '身份证号', '123456789', '管理员', 379);
+INSERT INTO `t_user` VALUES ('2', 'Kevin', '123456', '男', '2019-11-27', '北京', '朝阳', '中国', '身份证号', '123456789', '管理员', 119);
 INSERT INTO `t_user` VALUES ('321d90f4-a6e4-446d-bea6-7b948f6e6cd1', 'Carey', '88289178', '男', '1998-03-13', '山东', '济南', '中国', '身份证号', '123456', '会员', 10);
+
+-- ----------------------------
+-- Table structure for tb_favorite
+-- ----------------------------
+DROP TABLE IF EXISTS `tb_favorite`;
+CREATE TABLE `tb_favorite`  (
+  `id` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `u_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '用户',
+  `l_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '度假主题',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of tb_favorite
+-- ----------------------------
+INSERT INTO `tb_favorite` VALUES ('21b9bde1-cd8e-4188-a389-7fe7bad4d032', '2', '3e525202-5bb3-452e-a33c-3b374e46a897');
+INSERT INTO `tb_favorite` VALUES ('97ced382-9c01-4274-a8cc-0e8867967235', '2', '6aaef1c5-3aac-45af-bb9e-ebe9f2d4c9f9');
+INSERT INTO `tb_favorite` VALUES ('dd42cb0c-55ab-4e71-bf54-2f6253835503', '2', 'eba5e5c6-2f64-44c2-b333-a71358288a87');
 
 SET FOREIGN_KEY_CHECKS = 1;

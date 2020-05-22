@@ -41,7 +41,7 @@ public class ParticipationDao {
     public void update(Participation participation) {
         try {
             JdbcTemplate template = new JdbcTemplate(JDBCUtils.getDataSource());
-            String sql = "UPDATE t_participation set p_nameid=?,p_hoildayid=?,flag =?,price=? where u_ID=?";
+            String sql = "UPDATE t_participation set p_nameid=?,p_hoildayid=?,flag =?,price=? where p_id=?";
             template.update(sql, participation.getP_nameid(), participation.getP_hoildayid(), participation.getFlag(), participation.getPrice(), participation.getP_id());
         } catch (DataAccessException e) {
             e.printStackTrace();
